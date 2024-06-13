@@ -1,3 +1,7 @@
+from builtins import abs, len, range
+from main import crops
+
+
 def FarmWhat():
 	def SetArray(array, obj):
 		array[0] = obj

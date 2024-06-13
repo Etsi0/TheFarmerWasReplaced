@@ -1,34 +1,30 @@
+from builtins import list, max, range
 from Util import FarmWhat, Loop
 
 
 clear()
 
-GRASS = []
-CARROTS = []
-TREE = []
-PUMPKIN = []
+oneXOne = []
+fullSizeXFullSize = []
 
 for row in range(get_world_size()):
 	if row == 0:
-		GRASS.append([])
-		CARROTS.append([])
-		TREE.append([])
-
-	PUMPKIN.append([])
-
+		oneXOne.append([])
+	
+	fullSizeXFullSize.append([])
+	
 	for col in range(get_world_size()):
 		if row == 0 and col == 0:
-			GRASS[row].append(False)
-			CARROTS[row].append(False)
-			TREE[row].append(False)
-
-		PUMPKIN[row].append(False)
+			oneXOne[row].append([False])
+			
+		fullSizeXFullSize[row].append([])
+			
 
 crops = [
-	[Items.Hay, Entities.Grass, None, Grounds.Turf, []],
-	[Items.Carrot, Entities.Carrots, Items.Carrot_Seed, Grounds.Soil, []],
-	[Items.Wood, Entities.Tree, None, Grounds.Soil, []],
-	[Items.Pumpkin, Entities.Pumpkin, Items.Pumpkin_Seed, Grounds.Soil, []]
+	[Items.Hay, Entities.Grass, None, Grounds.Turf, oneXOne, []],
+	[Items.Carrot, Entities.Carrots, Items.Carrot_Seed, Grounds.Soil, oneXOne, []],
+	[Items.Wood, Entities.Tree, None, Grounds.Soil, oneXOne, []],
+	[Items.Pumpkin, Entities.Pumpkin, Items.Pumpkin_Seed, Grounds.Soil, fullSizeXFullSize, []]
 ]
 
 isRunning = False
@@ -46,12 +42,11 @@ def Main():
 
 def ResetCropArrays():
 	for crop in crops:
-		crop.pop(4)
-	
-	crops[0].append(list(GRASS))
-	crops[1].append(list(CARROTS))
-	crops[2].append(list(TREE))
-	crops[3].append(list(PUMPKIN))
+		crop.pop(5)
+		temp = []
+		for row in crop[4]:
+			temp.append(list(row))
+		crop.append(temp)
 
 
 def Orchestra(crop):
@@ -67,13 +62,13 @@ def Orchestra(crop):
 
 def Check(crop):
 	def Action():
-		crop[4][get_pos_y()][get_pos_x()] = can_harvest()
+		crop[5][get_pos_y()][get_pos_x()] = can_harvest()
 		
 		if not can_harvest():
 			return False
 
 
-	if (Loop(crop[4], Action) == False):
+	if (Loop(crop[5], Action) == False):
 		return False
 
 	return True
@@ -103,7 +98,7 @@ def Plant(crop):
 					
 				use_item(Items.Fertilizer)
 	
-	Loop(crop[4], Move)
+	Loop(crop[5], Move)
 
 
 Main()
